@@ -102,6 +102,10 @@ body {
   font-size: 1.3rem;
   box-shadow: 0 3px 10px rgba(30,150,60,0.4), inset 0 1px 0 rgba(255,255,255,0.5);
   border: 1.5px solid rgba(255,255,255,0.6);
+  overflow: hidden;
+}
+.logo-icon img {
+  width: 100%; height: 100%; object-fit: cover;
 }
 .logo-text-wrap {}
 .logo-name {
@@ -353,10 +357,10 @@ body {
   0%,100% { opacity:1; } 50% { opacity:0.4; }
 }
 
-/* Bet control */
+/* Bet control - simplified */
 .bet-row {
   display: flex; align-items: center; gap: 8px;
-  margin-bottom: 7px;
+  margin-bottom: 12px;
 }
 .bet-lbl-wrap {
   font-size: 0.5rem; letter-spacing: 2px; color: rgba(200,235,255,0.7);
@@ -388,27 +392,7 @@ body {
   color: #fff; text-shadow: 0 1px 4px rgba(0,80,200,0.4);
 }
 
-/* Quick bets */
-.quick-bets {
-  display: flex; gap: 4px; margin-bottom: 7px; justify-content: center;
-}
-.qbet {
-  flex: 1;
-  background: linear-gradient(135deg, rgba(255,255,255,0.22) 0%, rgba(180,225,255,0.10) 100%);
-  border: 1px solid rgba(255,255,255,0.38);
-  border-radius: 8px; padding: 3px 4px;
-  font-size: 0.5rem; font-weight: 700;
-  color: rgba(220,245,255,0.85);
-  cursor: pointer; text-align: center;
-  transition: all 0.15s;
-  box-shadow: 0 1px 4px rgba(0,60,140,0.1), inset 0 1px 0 rgba(255,255,255,0.4);
-}
-.qbet:hover { background: linear-gradient(135deg, rgba(255,255,255,0.38) 0%, rgba(180,230,255,0.20) 100%); color:#fff; }
-.qbet.active {
-  background: linear-gradient(135deg, rgba(80,200,255,0.5) 0%, rgba(30,150,255,0.3) 100%);
-  border-color: rgba(120,220,255,0.7);
-  color: #fff;
-}
+/* Quick bets removed */
 
 /* Spin button */
 .btn-spin {
@@ -445,19 +429,28 @@ body {
 .btn-spin:disabled::after { display: none; }
 
 /* Action row */
-.row2 { display: flex; gap: 6px; }
+.row2 {
+  display: flex;
+  gap: 6px;
+  margin-top: 2px;
+}
 .btn-sm {
-  flex: 1; padding: 7px 4px;
+  flex: 1;
+  padding: 8px 4px;
   background: linear-gradient(160deg, rgba(255,255,255,0.26) 0%, rgba(180,225,255,0.12) 100%);
   border: 1.5px solid rgba(255,255,255,0.42);
   border-radius: 10px;
   color: rgba(220,245,255,0.9);
   font-family: 'Nunito', sans-serif;
-  font-size: 0.62rem; font-weight: 700; cursor: pointer;
+  font-size: 0.62rem;
+  font-weight: 700;
+  cursor: pointer;
   letter-spacing: 0.5px;
   transition: all 0.2s;
   box-shadow: 0 2px 6px rgba(0,60,140,0.12), inset 0 1px 0 rgba(255,255,255,0.5);
-  position: relative; overflow: hidden;
+  position: relative;
+  overflow: hidden;
+  text-align: center;
 }
 .btn-sm::before {
   content:''; position:absolute; top:0; left:0; right:0; height:50%;
@@ -702,7 +695,7 @@ body {
 <div id="app">
   <div class="topbar">
     <div class="logo-wrap">
-      <div class="logo-icon">⚡</div>
+      <div class="logo-icon"><img src="a.gif" alt="logo"></div>
       <div class="logo-text-wrap">
         <div class="logo-name">KAZUMI MAJIGAMI</div>
         <span class="logo-sub">✦ AEROLIST VOIDMAKER ✦</span>
@@ -716,7 +709,7 @@ body {
 
   <div class="title-strip">
     <div class="game-title">⚡ VOID CLUSTER ⚡</div>
-    <div class="game-sub">Cluster Pays · Tumble · Win × Multiplier</div>
+    <div class="game-sub">Cluster Pays · Tumble · Win Multiplier</div>
   </div>
 
   <div class="pay-strip">
@@ -745,24 +738,14 @@ body {
       </div>
     </div>
 
-    <!-- Bet control -->
+    <!-- Bet control - simplified -->
     <div class="bet-row">
       <span class="bet-lbl-wrap">Taruhan</span>
       <div class="bet-track">
-        <button class="bet-btn" onclick="changeBet(-1)">−</button>
+        <button class="bet-btn" onclick="changeBet(-500)">−</button>
         <span class="bet-value" id="betDisplay">Rp 500</span>
-        <button class="bet-btn" onclick="changeBet(1)">+</button>
+        <button class="bet-btn" onclick="changeBet(500)">+</button>
       </div>
-    </div>
-
-    <!-- Quick bet presets -->
-    <div class="quick-bets" id="quickBets">
-      <div class="qbet" onclick="setBetPreset(100)">100</div>
-      <div class="qbet" onclick="setBetPreset(250)">250</div>
-      <div class="qbet active" onclick="setBetPreset(500)">500</div>
-      <div class="qbet" onclick="setBetPreset(1000)">1K</div>
-      <div class="qbet" onclick="setBetPreset(2500)">2.5K</div>
-      <div class="qbet" onclick="setBetPreset(5000)">5K</div>
     </div>
 
     <button class="btn-spin" id="btnSpin" onclick="doSpin()">⚡ VOID SPIN — Rp 500</button>
@@ -776,18 +759,9 @@ body {
 
 <script>
 /* ============================================================
-   KONFIGURASI
-   
-   LOGIKA RTP YANG BENAR:
-   - RTP (Return To Player) mengontrol seberapa besar rata-rata kemenangan per taruhan
-   - RTP 96% = rata-rata pemain menerima kembali 96% dari total taruhan
-   - Ini dilakukan dengan mengontrol PROBABILITAS win dan BESAR kemenangan
-   - WIN RATE (60-75%) mengontrol seberapa sering pemain menang
-   - Kemenangan aktual = base_win × bet_multiplier (proporsional dengan taruhan)
-   
-   PAYTABLE:
-   - Semua pembayaran adalah MULTIPLIER dari taruhan (bet), bukan nilai tetap Rupiah
-   - Contoh: void ×8 membayar 20× taruhan = taruhan Rp500 → menang Rp10.000
+   KONFIGURASI RTP YANG AKURAT
+   - Setiap spin hanya membayar sekali (tanpa cascade multiplier)
+   - RTP langsung mengontrol rata-rata kemenangan per spin
 ============================================================ */
 const COLS = 6, ROWS = 5, N = COLS * ROWS;
 const GAP   = 3;
@@ -795,21 +769,9 @@ const PAD_H = 18;
 const PAD_V = 8;
 
 const INIT_BALANCE = 10000;
-const BET_OPTIONS  = [100, 250, 500, 1000, 1500, 2000, 2500, 3000, 4000, 5000];
-const MIN_BET = 100;
-const MAX_BET = 5000;
+let currentBet = 500;
 
-/* Cascade multiplier steps (berlaku saat ada tumble beruntun) */
-const CASCADE_MULT = [1, 2, 3, 5, 8, 12, 20];
-
-/*
-  PAYTABLE: pembayaran adalah MULTIPLIER dari bet
-  p[n] = berapa kali lipat bet yang didapat jika kluster berukuran n
-  
-  Contoh: sym void, cluster 8 = 20× bet
-  Jika bet = Rp500 → menang = Rp10.000
-  Jika bet = Rp1000 → menang = Rp20.000
-*/
+/* Paytable: multiplier dari taruhan */
 const SYMS = [
   { id:'void',   e:'👾', w:6,  p:{4:3.5, 5:6.0,  6:9.0,  7:12.0, 8:20.0, 9:28.0, 10:36.0, 11:44.0, 12:60.0  }},
   { id:'galaxy', e:'🌌', w:9,  p:{4:1.0, 5:2.0,  6:3.5,  7:5.0,  8:8.0,  9:11.0, 10:14.0, 11:17.0, 12:22.0  }},
@@ -817,7 +779,6 @@ const SYMS = [
   { id:'planet', e:'🪐', w:13, p:{4:0.25,5:0.4,  6:0.65, 7:1.0,  8:2.0,  9:2.5,  10:3.0,  11:3.5,  12:4.0   }},
   { id:'comet',  e:'🌠', w:15, p:{4:0.12,5:0.22, 6:0.35, 7:0.55, 8:1.0,  9:1.3,  10:1.6,  11:1.9,  12:2.2   }},
 ];
-
 const POOL = [];
 SYMS.forEach(s => { for (let i = 0; i < s.w; i++) POOL.push(s); });
 
@@ -825,36 +786,17 @@ SYMS.forEach(s => { for (let i = 0; i < s.w; i++) POOL.push(s); });
 let board       = new Array(N).fill(null);
 let balance     = INIT_BALANCE;
 let roundWin    = 0;
-let curCascade  = 0;  // jumlah cascade, dipakai untuk menghitung mult
 let animRunning = false;
 let CW = 0, CH = 0;
-
-let currentBet  = 500;
-let betIdx      = BET_OPTIONS.indexOf(500);
 
 let autoSpinActive  = false;
 let autoSpinTimeout = null;
 
-/*
-  RTP SETTING:
-  - rtpValue: nilai RTP target (misal 0.96 = 96%)
-  - winChance: probabilitas spin menghasilkan kemenangan (default 0.70 = 70%)
-  - Kemenangan yang diharapkan per spin = bet × rtpValue / winChance
-    Tapi karena ada cascade dan multiplier, kita pakai target EV per spin
-  
-  Cara kerja:
-  1. Setiap spin, tentukan apakah "win" berdasarkan winChance
-  2. Jika win, tentukan target win amount = bet × winMult (random dalam range)
-     dimana winMult dipilih sehingga rata-rata EV = rtpValue × bet
-  3. Board di-generate untuk menghasilkan kemenangan mendekati target tersebut
-*/
-let rtpValue  = 0.96;  // default 96%
-let winChance = 0.70;  // default 70% spin menang
+/* RTP & win chance */
+let rtpValue  = 0.96;
+let winChance = 0.70;
 
-/* Derived dari RTP */
 function getRtpStats() {
-  // Expected win per winning spin = (rtp × bet) / winChance
-  // Volatility proxy: higher RTP with lower winChance = more volatile
   const evPerWin = rtpValue / winChance;
   let volatility = 'Sedang';
   if (evPerWin > 2.0) volatility = 'Tinggi';
@@ -863,30 +805,22 @@ function getRtpStats() {
   return { evPerWin, volatility, maxWinMult };
 }
 
-/* Load setting */
+/* Simpan/load */
 function loadSettings() {
   try {
     const s = JSON.parse(localStorage.getItem('kazumiV2') || '{}');
     if (s.rtp)       rtpValue  = Math.min(1.20, Math.max(0.70, s.rtp));
     if (s.winChance) winChance = Math.min(0.85, Math.max(0.40, s.winChance));
-    if (s.bet)       currentBet = s.bet;
+    if (s.bet)       currentBet = Math.max(100, s.bet);
     if (s.balance !== undefined) balance = s.balance;
   } catch(e) {}
 }
-
 function saveSettings() {
-  try {
-    localStorage.setItem('kazumiV2', JSON.stringify({
-      rtp: rtpValue, winChance, bet: currentBet, balance
-    }));
-  } catch(e) {}
+  localStorage.setItem('kazumiV2', JSON.stringify({
+    rtp: rtpValue, winChance, bet: currentBet, balance
+  }));
 }
-
 loadSettings();
-if (currentBet < MIN_BET) currentBet = MIN_BET;
-if (currentBet > MAX_BET) currentBet = MAX_BET;
-betIdx = BET_OPTIONS.indexOf(currentBet);
-if (betIdx < 0) { betIdx = 2; currentBet = BET_OPTIONS[2]; }
 
 /* Utils */
 function rng()     { return Math.random(); }
@@ -912,13 +846,10 @@ function measureGrid() {
   grid.style.width  = totalW + 'px';
   grid.style.height = totalH + 'px';
 }
-
 function cellLeft(c) { return c*(CW+GAP); }
 function cellTop(r)  { return r*(CH+GAP); }
 
-/* ============================================================
-   RENDER
-============================================================ */
+/* Render */
 function renderGrid() {
   measureGrid();
   const grid = document.getElementById('slotGrid');
@@ -933,14 +864,12 @@ function renderGrid() {
     grid.appendChild(el);
   }
 }
-
 function setSymInEl(el, sym) {
   el.innerHTML = '';
   const d = document.createElement('div'); d.className = 'sym';
   const s = document.createElement('span'); s.className = 'sym-e'; s.textContent = sym.e;
   d.appendChild(s); el.appendChild(d);
 }
-
 function getCell(i) { return document.getElementById('c'+i); }
 
 /* ============================================================
@@ -969,21 +898,7 @@ function findClustersOnBoard(b) {
   }
   return clusters;
 }
-
 function findClusters() { return findClustersOnBoard(board); }
-
-function breakAllClusters(b) {
-  for (let iter = 0; iter < 12; iter++) {
-    const cls = findClustersOnBoard(b);
-    if (!cls.length) break;
-    cls.forEach(cl => {
-      const idx   = cl.cells[cl.cells.length-1];
-      const avoid = b[idx].id;
-      const others = SYMS.filter(s => s.id !== avoid);
-      b[idx] = others[Math.floor(rng()*others.length)];
-    });
-  }
-}
 
 function breakAllClustersExcept(b, preserveSet) {
   for (let iter = 0; iter < 18; iter++) {
@@ -1004,10 +919,7 @@ function breakAllClustersExcept(b, preserveSet) {
 }
 
 /* ============================================================
-   BOARD GENERATION
-
-   targetMultiplier: target kemenangan dalam kelipatan BET
-   (sudah memperhitungkan RTP)
+   BOARD GENERATION with target multiplier
 ============================================================ */
 function generateZonkBoard() {
   for (let attempt = 0; attempt < 200; attempt++) {
@@ -1015,16 +927,22 @@ function generateZonkBoard() {
     if (!findClustersOnBoard(b).length) return b;
   }
   const b = Array.from({length:N}, () => rndSym());
-  breakAllClusters(b);
+  // ensure no clusters by brute breaking
+  for (let i=0;i<5;i++) {
+    const cls = findClustersOnBoard(b);
+    if (!cls.length) break;
+    cls.forEach(cl => {
+      cl.cells.forEach(idx => { b[idx] = rndSym(); });
+    });
+  }
   return b;
 }
 
 function generateWinBoard(targetMult) {
-  // Cari kombinasi sym+size yang paling dekat dengan targetMult
+  // Find closest symbol + size
   let bestSym  = SYMS[0];
   let bestSize = 4;
   let bestDiff = Infinity;
-
   for (const sym of SYMS) {
     const keys = Object.keys(sym.p).map(Number).sort((a,b)=>a-b);
     for (const k of keys) {
@@ -1035,8 +953,7 @@ function generateWinBoard(targetMult) {
       }
     }
   }
-
-  // Tanam kluster di tengah
+  // Plant cluster
   const planted = new Set();
   const centres = [13,14,15,19,20,21,7,8,9];
   planted.add(centres[Math.floor(rng()*centres.length)]);
@@ -1052,7 +969,6 @@ function generateWinBoard(targetMult) {
     const free = nbrs.filter(n => !planted.has(n));
     if (free.length) planted.add(free[Math.floor(rng()*free.length)]);
   }
-
   const otherSyms = SYMS.filter(s => s.id !== bestSym.id);
   const b = [];
   for (let i = 0; i < N; i++) {
@@ -1060,69 +976,35 @@ function generateWinBoard(targetMult) {
     else b.push(otherSyms[Math.floor(rng()*otherSyms.length)]);
   }
   breakAllClustersExcept(b, planted);
-
-  // Hitung actual pay dari board ini
-  const clusters = findClustersOnBoard(b);
-  let actualMult = 0;
-  clusters.forEach(cl => {
-    const cnt  = cl.cells.length;
-    const keys = Object.keys(cl.sym.p).map(Number).sort((a,b)=>a-b);
-    let base = 0;
-    keys.forEach(k => { if (cnt >= k) base = cl.sym.p[k]; });
-    actualMult += base;
-  });
-  b._exactMult = actualMult;
   return b;
 }
 
-/*
-  Menentukan target win multiplier per spin berdasarkan RTP:
-  - Jika rng < winChance → spin menang
-  - Target EV per win = rtpValue / winChance
-  - Kita distribusikan kemenangan secara acak di sekitar EV:
-    uniformly random di [EV×0.3 .. EV×2.5] capped ke maxWinMult
-*/
 function generateBoard() {
   if (rng() >= winChance) {
-    // Spin tidak menang (zonk)
     return generateZonkBoard();
   }
-
   const stats = getRtpStats();
   const evPerWin = rtpValue / winChance;
-  // Target win multiplier: acak di sekitar EV
-  const minMult = evPerWin * 0.3;
-  const maxMult = evPerWin * 2.8;
+  const minMult = evPerWin * 0.4;
+  const maxMult = evPerWin * 2.5;
   const targetMult = minMult + rng() * (maxMult - minMult);
-
   return generateWinBoard(targetMult);
 }
 
 /* ============================================================
    BET CONTROL
 ============================================================ */
-function changeBet(dir) {
-  betIdx = Math.max(0, Math.min(BET_OPTIONS.length-1, betIdx + dir));
-  currentBet = BET_OPTIONS[betIdx];
-  if (currentBet > balance) {
-    // Pilih bet terbesar yang masih ≤ saldo
-    for (let i = BET_OPTIONS.length-1; i >= 0; i--) {
-      if (BET_OPTIONS[i] <= balance) { betIdx = i; currentBet = BET_OPTIONS[i]; break; }
-    }
-  }
-  updateUI();
-}
-
-function setBetPreset(val) {
-  if (val > balance) { alert('Saldo tidak cukup untuk taruhan ini.'); return; }
-  const idx = BET_OPTIONS.indexOf(val);
-  if (idx >= 0) { betIdx = idx; currentBet = val; }
-  else { currentBet = val; }
+function changeBet(delta) {
+  let newBet = currentBet + delta;
+  if (newBet < 100) newBet = 100;
+  if (newBet > balance && newBet > currentBet) newBet = currentBet;
+  if (newBet > balance) newBet = balance;
+  currentBet = newBet;
   updateUI();
 }
 
 /* ============================================================
-   SPIN UTAMA
+   SPIN & TUMBLE (no cascade multiplier)
 ============================================================ */
 async function doSpin() {
   if (animRunning) return;
@@ -1134,7 +1016,6 @@ async function doSpin() {
   animRunning = true;
   balance    -= currentBet;
   roundWin    = 0;
-  curCascade  = 0;
   updateUI();
 
   const btn = document.getElementById('btnSpin');
@@ -1144,29 +1025,17 @@ async function doSpin() {
   await dropAllIn();
   await tumbleLoop();
 
-  // Kemenangan sudah terakumulasi di roundWin (dalam Rupiah)
   balance += roundWin;
-
-  const rd = document.getElementById('roundDisp');
-  rd.textContent = fmtRp(roundWin);
-  if (roundWin > 0) {
-    rd.classList.remove('flash'); void rd.offsetWidth; rd.classList.add('flash');
-  }
-
   updateUI();
   saveSettings();
   animRunning = false;
   updateSpinState();
 
-  // Tampilkan modal jika menang besar (> 5× bet)
   if (roundWin >= currentBet * 5) {
     await openWinModal(roundWin);
   }
 }
 
-/* ============================================================
-   DROP ALL IN
-============================================================ */
 async function dropAllIn() {
   for (let i = 0; i < N; i++) {
     const r = Math.floor(i/COLS), c = i%COLS;
@@ -1177,7 +1046,6 @@ async function dropAllIn() {
     el.className = 'cell';
     setSymInEl(el, board[i]);
   }
-
   const colDone = [];
   for (let c = 0; c < COLS; c++) {
     const p = new Promise(res => {
@@ -1205,57 +1073,42 @@ async function dropAllIn() {
   await sleep(100);
 }
 
-/* ============================================================
-   TUMBLE LOOP
-   
-   Setiap cascade:
-   - Hitung prize = Σ(cluster_base_mult) × cascade_multiplier × bet
-   - cascade_multiplier: 1× untuk cascade 1, meningkat tiap cascade berikutnya
-============================================================ */
 async function tumbleLoop() {
+  let anyWin = false;
   while (true) {
     const clusters = findClusters();
     if (!clusters.length) break;
+    anyWin = true;
 
     const winSet = new Set();
     clusters.forEach(cl => cl.cells.forEach(i => winSet.add(i)));
 
     // Glow
-    const isSuper = curCascade >= 2;
     winSet.forEach(i => {
       const el = getCell(i);
-      if (el) el.classList.add(isSuper ? 'super-glow' : 'win-glow');
+      if (el) el.classList.add('win-glow');
     });
     await sleep(550);
 
-    // Hitung kemenangan cascade ini
-    // cascade_mult: mulai dari 1, lalu naik sesuai tabel
-    const cascadeMult = CASCADE_MULT[Math.min(curCascade, CASCADE_MULT.length-1)];
+    // Hitung kemenangan tanpa multiplier cascade
     let cascadeWin = 0;
-
     clusters.forEach(cl => {
       const cnt  = cl.cells.length;
       const keys = Object.keys(cl.sym.p).map(Number).sort((a,b)=>a-b);
       let baseMult = 0;
       keys.forEach(k => { if (cnt >= k) baseMult = cl.sym.p[k]; });
-      // Win = baseMult × cascadeMult × bet
-      const clWin = baseMult * cascadeMult * currentBet;
+      const clWin = baseMult * currentBet;
       cascadeWin += clWin;
-
-      // Tampilkan burst
-      const cIdx = cl.cells[Math.floor(cl.cells.length/2)];
-      const label = cascadeMult > 1
-        ? fmtRp(clWin) + ' (×'+cascadeMult+')'
-        : fmtRp(clWin);
-      showBurst(cIdx, '+' + label);
+      showBurst(cl.cells[Math.floor(cl.cells.length/2)], '+' + fmtRp(clWin));
     });
-
     cascadeWin = Math.round(cascadeWin);
+    roundWin += cascadeWin;
+    updateUI();
 
     // Blast
     winSet.forEach(i => {
       const el = getCell(i);
-      if (el) { el.classList.remove('win-glow','super-glow'); el.classList.add('blasting'); }
+      if (el) { el.classList.remove('win-glow'); el.classList.add('blasting'); }
       board[i] = null;
     });
     await sleep(440);
@@ -1268,23 +1121,18 @@ async function tumbleLoop() {
       el.style.width = CW+'px'; el.style.height = CH+'px';
     });
 
-    roundWin   += cascadeWin;
-    curCascade += 1;
-    updateUI();
-
-    const multLabel = cascadeMult > 1 ? ' (cascade ×'+cascadeMult+')' : '';
-    showWinText('+' + fmtRp(cascadeWin) + multLabel);
-
+    showWinText('+' + fmtRp(cascadeWin));
     if (cascadeWin > 0) spawnConfetti(cascadeWin >= currentBet*10 ? 60 : 20);
 
     await gravityRefill();
     await sleep(180);
   }
+  if (!anyWin) {
+    // Show no-win message briefly
+    showWinText('✨ no win ✨');
+  }
 }
 
-/* ============================================================
-   GRAVITY REFILL
-============================================================ */
 async function gravityRefill() {
   const promises = [];
   for (let c = 0; c < COLS; c++) {
@@ -1340,7 +1188,6 @@ function showBurst(cellIdx, text) {
   grid.appendChild(b);
   setTimeout(() => b.remove(), 1500);
 }
-
 function showWinText(txt) {
   const el = document.getElementById('winOv');
   el.textContent = txt;
@@ -1348,33 +1195,20 @@ function showWinText(txt) {
   void el.offsetWidth;
   el.classList.add('show');
 }
-
 function updateSpinState() {
   const btn = document.getElementById('btnSpin');
-  const enough = balance >= currentBet && currentBet >= MIN_BET;
+  const enough = balance >= currentBet && currentBet >= 100;
   btn.disabled = !enough || animRunning;
   btn.textContent = `⚡ VOID SPIN — ${fmtRp(currentBet)}`;
 }
-
 function updateUI() {
   document.getElementById('balanceDisp').textContent = fmtRp(balance);
   document.getElementById('roundDisp').textContent   = fmtRp(roundWin);
-
-  const cm = CASCADE_MULT[Math.min(curCascade, CASCADE_MULT.length-1)];
-  document.getElementById('multDisp').innerHTML = `×${cm} <span class="rtp-dot"></span>`;
-  document.getElementById('betDisplay').textContent = fmtRp(currentBet);
-
-  // Update quick bet highlights
-  document.querySelectorAll('.qbet').forEach(q => {
-    q.classList.toggle('active', parseInt(q.textContent.replace('K','').trim()) * (q.textContent.includes('K')?1000:1) === currentBet
-      || q.textContent.trim() === currentBet.toString()
-    );
-  });
-
+  document.getElementById('multDisp').innerHTML      = `×1 <span class="rtp-dot"></span>`;
+  document.getElementById('betDisplay').textContent  = fmtRp(currentBet);
   updateSpinState();
   updateRtpModalUI();
 }
-
 function updateRtpModalUI() {
   const stats = getRtpStats();
   document.getElementById('rtpActiveDisp').textContent = Math.round(rtpValue * 100) + '%';
@@ -1383,9 +1217,7 @@ function updateRtpModalUI() {
   document.getElementById('volatDisp').textContent     = stats.volatility;
 }
 
-/* ============================================================
-   AUTO SPIN
-============================================================ */
+/* Auto spin */
 function toggleAutoSpin() {
   if (autoSpinActive) {
     autoSpinActive = false;
@@ -1399,7 +1231,6 @@ function toggleAutoSpin() {
     runAutoSpin();
   }
 }
-
 function runAutoSpin() {
   if (!autoSpinActive) return;
   if (balance < currentBet) {
@@ -1414,9 +1245,7 @@ function runAutoSpin() {
   });
 }
 
-/* ============================================================
-   TOP UP & RESET
-============================================================ */
+/* Reset & Top Up */
 function topUp() {
   if (autoSpinActive) {
     autoSpinActive = false;
@@ -1424,11 +1253,10 @@ function topUp() {
     document.getElementById('autoSpinBtn').classList.remove('active');
   }
   balance = INIT_BALANCE;
-  roundWin = 0; curCascade = 0;
+  roundWin = 0;
   updateUI();
   saveSettings();
 }
-
 function resetAll() {
   if (autoSpinActive) {
     autoSpinActive = false;
@@ -1437,17 +1265,15 @@ function resetAll() {
   }
   document.getElementById('modal').classList.remove('open');
   balance = INIT_BALANCE;
-  roundWin = 0; curCascade = 0;
-  currentBet = 500; betIdx = BET_OPTIONS.indexOf(500);
+  roundWin = 0;
+  currentBet = 500;
   board = Array.from({length:N}, () => rndSym());
   renderGrid();
   updateUI();
   saveSettings();
 }
 
-/* ============================================================
-   WIN MODAL
-============================================================ */
+/* Win modal */
 function openWinModal(amount) {
   return new Promise(res => {
     const mult = amount / currentBet;
@@ -1470,9 +1296,7 @@ function openWinModal(amount) {
   });
 }
 
-/* ============================================================
-   SETTING MODAL (RTP)
-============================================================ */
+/* Setting Modal */
 function initSettingModal() {
   const multEl   = document.getElementById('multDisp');
   const modal    = document.getElementById('settingModal');
@@ -1486,14 +1310,12 @@ function initSettingModal() {
   slider.addEventListener('input', () => {
     const v = parseFloat(slider.value);
     sliderVal.textContent = Math.round(v*100) + '%';
-    // Deselect presets
     document.querySelectorAll('.rtp-preset').forEach(p => p.classList.remove('selected'));
   });
 
   multEl.addEventListener('dblclick', () => {
     slider.value = rtpValue;
     sliderVal.textContent = Math.round(rtpValue*100) + '%';
-    // Sync preset highlight
     document.querySelectorAll('.rtp-preset').forEach(p => {
       const pv = parseFloat(p.dataset.rtp);
       p.classList.toggle('selected', Math.abs(pv - rtpValue) < 0.005);
@@ -1504,7 +1326,6 @@ function initSettingModal() {
 
   saveBtn.addEventListener('click', () => {
     rtpValue = parseFloat(slider.value);
-    // Win chance disesuaikan: RTP rendah → win lebih jarang, RTP tinggi → lebih sering
     winChance = Math.min(0.82, Math.max(0.45, 0.55 + (rtpValue - 0.88) * 0.6));
     saveSettings();
     updateUI();
@@ -1513,7 +1334,6 @@ function initSettingModal() {
 
   modal.addEventListener('click', e => { if (e.target===modal) modal.classList.remove('open'); });
 }
-
 function selectRtpPreset(el) {
   document.querySelectorAll('.rtp-preset').forEach(p => p.classList.remove('selected'));
   el.classList.add('selected');
@@ -1522,9 +1342,7 @@ function selectRtpPreset(el) {
   document.getElementById('rtpSliderVal').textContent = Math.round(v*100)+'%';
 }
 
-/* ============================================================
-   CONFETTI
-============================================================ */
+/* Confetti */
 function spawnConfetti(count) {
   const c = document.getElementById('confetti');
   const colors = ['#4dc4ff','#80e8ff','#3dcc6a','#aaff88','#ffffff','#ffe066','#ff9966','#aaffdd','#c8f0ff'];
@@ -1538,40 +1356,26 @@ function spawnConfetti(count) {
   }
 }
 
-/* ============================================================
-   BACKGROUND (Aero stars + particles)
-============================================================ */
+/* Background animation */
 function initBg() {
   const cv  = document.getElementById('bgCanvas');
   const ctx = cv.getContext('2d');
   let W, H, stars = [], particles = [];
-
   function resize() {
     W = cv.width  = window.innerWidth;
     H = cv.height = window.innerHeight;
-    stars = Array.from({length:100}, () => ({
-      x: rng()*W, y: rng()*H,
-      r: rng()*1.4+0.2, a: rng(), da: 0.005+rng()*0.01,
-      hue: 180+rng()*40
-    }));
-    particles = Array.from({length:18}, () => ({
-      x: rng()*W, y: rng()*H,
-      vx:(rng()-0.5)*0.3, vy:-0.2-rng()*0.4,
-      r: rng()*2+0.5, a: rng()*0.3+0.05
-    }));
+    stars = Array.from({length:100}, () => ({ x: rng()*W, y: rng()*H, r: rng()*1.4+0.2, a: rng(), da: 0.005+rng()*0.01, hue: 180+rng()*40 }));
+    particles = Array.from({length:18}, () => ({ x: rng()*W, y: rng()*H, vx:(rng()-0.5)*0.3, vy:-0.2-rng()*0.4, r: rng()*2+0.5, a: rng()*0.3+0.05 }));
   }
   resize();
   window.addEventListener('resize', resize);
-
-  (function frame() {
+  function frame() {
     ctx.clearRect(0,0,W,H);
-    // Subtle light beams
     const g = ctx.createRadialGradient(W*0.5, 0, 0, W*0.5, H*0.3, W*0.7);
     g.addColorStop(0, 'rgba(180,230,255,0.06)');
     g.addColorStop(0.5, 'rgba(100,180,255,0.025)');
     g.addColorStop(1, 'transparent');
     ctx.fillStyle = g; ctx.fillRect(0,0,W,H);
-
     stars.forEach(s => {
       s.a += s.da; if (s.a>1||s.a<0) s.da*=-1;
       ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
@@ -1584,12 +1388,11 @@ function initBg() {
       ctx.fillStyle = `rgba(200,240,255,${p.a})`; ctx.fill();
     });
     requestAnimationFrame(frame);
-  })();
+  }
+  frame();
 }
 
-/* ============================================================
-   INIT
-============================================================ */
+/* Initialization */
 function init() {
   for (let i = 0; i < N; i++) board[i] = rndSym();
   renderGrid();
@@ -1598,7 +1401,6 @@ function init() {
   updateUI();
   window.addEventListener('resize', () => renderGrid());
 }
-
 document.fonts.ready.then(() => {
   requestAnimationFrame(() => requestAnimationFrame(() => init()));
 });
