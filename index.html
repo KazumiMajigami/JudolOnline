@@ -1122,7 +1122,7 @@ function generateBoard() {
   const targetMult = minMult + rng() * (maxMult - minMult);
 
   return generateWinBoard(targetMult);
-}
+
 
 /* ============================================================
    BET CONTROL
@@ -1229,10 +1229,9 @@ async function doSpin() {
   if (roundWin >= currentBet * 5) {
     await openWinModal(roundWin);
   }
-}
 
 /* ============================================================
-   DROP ALL IN
+DROP ALL IN
 ============================================================ */
 async function dropAllIn() {
   for (let i = 0; i < N; i++) {
